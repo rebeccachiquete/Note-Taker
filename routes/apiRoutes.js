@@ -1,16 +1,20 @@
-var notes = require("../db/db.json");
 var fs = require("fs");
 var { v4: uuidv4 } = require('uuid');
 
+function getNotes() {
+  const data = fs.readFileSync('../db/db.json', 'utf8');
+  return data
+}
 module.exports = function (app) {
   app.get("/api/notes", function (req, res) {
-    res.json(notes);
+    res.json(getNotes());
   });
 
   app.post("/api/notes", function (req, res) {
     // add an id to the req.body before it gets pushed in
     req.body.id = uuidv4();
     // then push it into notes
+    const notes = getNotes();
     notes.push(req.body);
 
     fs.writeFile("./db/db.json", JSON.stringify(notes), "utf8", function (err) {
@@ -23,14 +27,11 @@ module.exports = function (app) {
   app.delete("/api/notes/:id", function (req, res) {
     var id = req.params.id;
     console.log(id);
-    console.log(notes);
-    const newNotes = notes.filter(note => note.id !== req.params.id);
+    const newNotes = getNotes().filter(note => note.id !== req.params.id);
     
-    
-    console.log(notes);
     fs.writeFile("./db/db.json", JSON.stringify(newNotes), "utf8", function (err) {
       if (err) throw err;
-      res.json(true);
+      res.json({success: true});
     })
 
   });
