@@ -19,21 +19,18 @@ module.exports = function (app) {
     })
 
   });
-
   
   app.delete("/api/notes/:id", function (req, res) {
     var id = req.params.id;
     console.log(id);
     console.log(notes);
-
-    // find a way to delete from the notes array using the id
-    // filter or for loop
-
-
+    const newNotes = notes.filter(note => note.id !== req.params.id);
+    
+    
     console.log(notes);
-    fs.writeFile("./db/db.json", JSON.stringify(notes), "utf8", function (err) {
+    fs.writeFile("./db/db.json", JSON.stringify(newNotes), "utf8", function (err) {
       if (err) throw err;
-      res.json(req.body);
+      res.json(true);
     })
 
   });
