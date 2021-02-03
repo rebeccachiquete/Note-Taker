@@ -2,8 +2,8 @@ var fs = require("fs");
 var { v4: uuidv4 } = require('uuid');
 
 function getNotes() {
-  const data = fs.readFileSync('../db/db.json', 'utf8');
-  return data
+  const data = fs.readFileSync('./db/db.json', 'utf8');
+  return JSON.parse(data);
 }
 module.exports = function (app) {
   app.get("/api/notes", function (req, res) {
